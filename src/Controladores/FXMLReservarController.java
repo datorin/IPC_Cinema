@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import modelo.Pelicula;
 
@@ -17,7 +18,7 @@ import modelo.Pelicula;
  *
  * @author Daniel
  */
-public class FXMLReservarController implements Initializable {
+public class FXMLReservarController implements Initializable, MiVentana {
     
     private Pelicula p;
     @FXML
@@ -35,5 +36,16 @@ public class FXMLReservarController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+
+    @Override
+    public void refrescar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void cerrar() {
+        Node a = (Node) nombrePeli.getParent();
+        a.getScene().getWindow().hide();
+    }
     
 }

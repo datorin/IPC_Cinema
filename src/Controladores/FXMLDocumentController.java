@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
@@ -32,7 +33,7 @@ import modelo.Pelicula;
  *
  * @author hectorizquierdofernandez
  */
-public class FXMLDocumentController implements Initializable {
+public class FXMLDocumentController implements Initializable, MiVentana {
 
     private Stage stageO;
     @FXML
@@ -62,11 +63,8 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button btnComprar;
 
-    @FXML
     private ComboBox fechaCombo;
 
-    @FXML
-    private ComboBox peliculasCombo;
 
     @FXML
     private void sumarCantidad(ActionEvent event) {
@@ -220,6 +218,17 @@ public class FXMLDocumentController implements Initializable {
         if (!"0123456789".contains(event.getCharacter())) {
             event.consume();
         }
+    }
+
+    @Override
+    public void refrescar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void cerrar() {
+        Node a = (Node) btnComprar.getParent();
+        a.getScene().getWindow().hide();
     }
 
 }

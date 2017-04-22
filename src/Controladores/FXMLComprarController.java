@@ -7,8 +7,11 @@ package Controladores;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 /**
@@ -16,8 +19,11 @@ import javafx.stage.Stage;
  *
  * @author Dani
  */
-public class FXMLComprarController implements Initializable {
+public class FXMLComprarController implements Initializable, MiVentana {
 
+    @FXML
+    private Button btnComprar;
+    
     /**
      * Initializes the controller class.
      */
@@ -34,5 +40,16 @@ public class FXMLComprarController implements Initializable {
         stageO = stage;
         scenePrev = stage.getScene();
         tituloPrev = stage.getTitle();
+    }
+
+    @Override
+    public void refrescar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void cerrar() {
+        Node a = (Node) btnComprar.getParent();
+        a.getScene().getWindow().hide();
     }
 }
