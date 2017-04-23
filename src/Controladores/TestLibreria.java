@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author hectorizquierdofernandez
+ * @author Daniel
  */
 public class TestLibreria extends Application {
 

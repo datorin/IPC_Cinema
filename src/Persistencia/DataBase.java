@@ -8,10 +8,10 @@ package Persistencia;
 import accesoaBD.AccesoaBD;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import modelo.Pelicula;
 import modelo.Proyeccion;
-
 /**
  *
  * @author Daniel
@@ -49,5 +49,13 @@ public class DataBase {
         this.peliculas = peliculas;
     }
     
-    
+    public ArrayList<String> getDias(){
+        ArrayList<String> al = new ArrayList<>();
+        for (Proyeccion p : proyecciones) {
+            DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            String st_dt = dt.format(p.getDia());
+            if(!al.contains(st_dt)) al.add(st_dt);
+        }
+        return al;
+    }
 }
