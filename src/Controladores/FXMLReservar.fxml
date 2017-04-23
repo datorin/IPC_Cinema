@@ -1,16 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.102" fx:controller="Controladores.FXMLReservarController">
-   <children>
-      <Label fx:id="nombrePeli" layoutX="131.0" layoutY="99.0" text="Label">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controladores.FXMLReservarController">
+   <top>
+      <Label fx:id="nombrePeli" text="Label" BorderPane.alignment="CENTER">
          <font>
-            <Font size="28.0" />
+            <Font size="36.0" />
          </font>
       </Label>
-   </children>
-</AnchorPane>
+   </top>
+   <left>
+      <VBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <ComboBox nodeOrientation="LEFT_TO_RIGHT" prefWidth="150.0" promptText="                 DÍA">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+            </ComboBox>
+            <ComboBox nodeOrientation="LEFT_TO_RIGHT" prefWidth="150.0" promptText="       PROYECCIONES">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="100.0" />
+               </VBox.margin>
+            </ComboBox>
+            <TextField alignment="CENTER" />
+         </children>
+      </VBox>
+   </left>
+</BorderPane>

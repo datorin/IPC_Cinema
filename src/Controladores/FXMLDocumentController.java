@@ -57,6 +57,44 @@ public class FXMLDocumentController implements Initializable, MiVentana {
 
     private void initPeliculas() {
         GridPane peliGrid = new GridPane();
+        peliGrid.setVgap(10);
+        int contador = 0;
+        for (Pelicula p : Singleton.getDataBase().getPeliculas()) {
+            try {
+                ColumnConstraints c = new ColumnConstraints();
+                c.setPercentWidth(100 / 5);
+                c.setHalignment(HPos.CENTER);
+
+                ImageView peliImage = new ImageView();
+                InputStream is = this.getClass().getResourceAsStream(p.getPathImage());
+                Image image = new Image(is, 330, 220, true, true);
+                peliImage.setImage(image);
+
+                peliGrid.add(peliImage, contador, 0);
+                peliGrid.getColumnConstraints().add(contador, c);
+
+                Button btnReservar = new Button("RESERVAR");
+                btnReservar.setPadding(new Insets(10, 45, 10, 45));
+                
+                btnReservar.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        CreadorVentanas.crearReservar(p);
+                    }
+                });
+                peliGrid.add(btnReservar, contador, 1);
+
+                contador++;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        contenedorPeliculas.setContent(peliGrid);
+        contenedorPeliculas.setFitToWidth(true);
+    }
+
+    /*private void initPeliculas() {
+        GridPane peliGrid = new GridPane();
         peliGrid.setHgap(15);
         peliGrid.setVgap(5);
         peliGrid.setGridLinesVisible(false);
@@ -82,8 +120,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             contador++;
         }
         contenedorPeliculas.setContent(peliGrid);
-    }
-
+    }*/
     private void initActualidad() {
         TabPane root = new TabPane();
         tabActualidad.setContent(root);
@@ -94,7 +131,6 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             VBox vb = new VBox();
             tb.setContent(vb);
             GridPane gp1 = new GridPane();
-            gp1.setGridLinesVisible(true);
             ColumnConstraints c0 = new ColumnConstraints();
             c0.setPercentWidth(200 / 7);
             c0.setHalignment(HPos.CENTER);
@@ -143,34 +179,34 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                 if (st_dt.equals(s)) {
                     // Creando las columna de la GridPane
                     c0 = new ColumnConstraints();
-                    c0.setPercentWidth(200 / 7);
+                    c0.setPercentWidth(200 / 6);
                     c0.setHalignment(HPos.LEFT);
                     c1 = new ColumnConstraints();
-                    c1.setPercentWidth(100 / 7);
+                    c1.setPercentWidth(100 / 6);
                     c1.setHalignment(HPos.CENTER);
                     c2 = new ColumnConstraints();
-                    c2.setPercentWidth(200 / 7);
+                    c2.setPercentWidth(200 / 6);
                     c2.setHalignment(HPos.CENTER);
                     c3 = new ColumnConstraints();
-                    c3.setPercentWidth(100 / 7);
+                    c3.setPercentWidth(100 / 6);
                     c3.setHalignment(HPos.CENTER);
                     c4 = new ColumnConstraints();
-                    c4.setPercentWidth(100 / 7);
+                    c4.setPercentWidth(100 / 6);
                     c4.setHalignment(HPos.CENTER);
                     gp2.getColumnConstraints().setAll(c0, c1, c2, c3, c4);
-                    
+
                     // Colocando TITULO de las proyecciones
                     l = new Label(p.getPelicula().getTitulo());
                     l.setPadding(new Insets(15, 15, 15, 15));
                     l.setStyle("-fx-font: 15 arial;");
                     gp2.add(l, 0, contador);
-                    
+
                     // Colocando HORA de las proyecciones
                     l = new Label(p.getHoraInicio());
                     l.setPadding(new Insets(15, 15, 15, 15));
                     l.setStyle("-fx-font: 15 arial;");
                     gp2.add(l, 1, contador);
-                    
+
                     // Colocando y Creando CANDTIDAD de las proyecciones
                     HBox hb = new HBox(40);
                     hb.setAlignment(Pos.CENTER);
@@ -207,10 +243,10 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                                 event.consume();
                                 return;
                             }
-                            if (Integer.parseInt(fieldCantidad.getText()+event.getCharacter()) > p.getSala().getCapacidad()) {
+                            if (Integer.parseInt(fieldCantidad.getText() + event.getCharacter()) > p.getSala().getCapacidad()) {
                                 event.consume();
                             }
-                            if (Integer.parseInt(fieldCantidad.getText()+event.getCharacter()) == 0) {
+                            if (Integer.parseInt(fieldCantidad.getText() + event.getCharacter()) == 0) {
                                 event.consume();
                             }
                         }
@@ -234,19 +270,21 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                             }
                         }
                     });
-                    hb.getChildren().addAll(btnRestarCantidad,fieldCantidad,btnSumarCantidad);
+                    hb.getChildren().addAll(btnRestarCantidad, fieldCantidad, btnSumarCantidad);
                     gp2.add(hb, 2, contador);
-                    
+
                     // Colocando CAPACIDAD de las proyecciones
                     int reservas = 0;
-                    for(Reserva r : p.getReservas()) reservas += r.getNumLocalidades();
-                    l = new Label(Integer.toString(reservas+p.getSala().getEntradasVendidas())+" / "+p.getSala().getCapacidad());
+                    for (Reserva r : p.getReservas()) {
+                        reservas += r.getNumLocalidades();
+                    }
+                    l = new Label(Integer.toString(reservas + p.getSala().getEntradasVendidas()) + " / " + p.getSala().getCapacidad());
                     gp2.add(l, 3, contador);
-                    
+
                     // Colocando y Creando el boton COMPRAR de las proyecciones
                     Button btnComprar = new Button("COMPRAR");
-                    btnComprar.setPadding(new Insets(10,10,10,10));
-                    HBox.setMargin(btnComprar, new Insets(5,5,5,5));
+                    btnComprar.setPadding(new Insets(10, 10, 10, 10));
+                    HBox.setMargin(btnComprar, new Insets(5, 5, 5, 5));
                     btnComprar.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
