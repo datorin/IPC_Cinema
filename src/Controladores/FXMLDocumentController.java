@@ -91,6 +91,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
         }
         contenedorPeliculas.setContent(peliGrid);
         contenedorPeliculas.setFitToWidth(true);
+        contenedorPeliculas.setPadding(new Insets(20,0,0,0));
     }
 
     /*private void initPeliculas() {

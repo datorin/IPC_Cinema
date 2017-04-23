@@ -22,23 +22,13 @@
          </BorderPane.margin>
       </Label>
    </top>
-   <bottom>
-      <TextField fx:id="fieldAdvertencia" alignment="CENTER" prefHeight="50.0" BorderPane.alignment="TOP_CENTER">
-         <font>
-            <Font size="16.0" />
-         </font>
-         <BorderPane.margin>
-            <Insets bottom="15.0" left="15.0" right="15.0" />
-         </BorderPane.margin>
-      </TextField>
-   </bottom>
    <center>
       <VBox BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER_RIGHT">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="NOMBRE DEL CLIENTE:  " />
-                  <TextField fx:id="fieldCliente" prefHeight="25.0" prefWidth="200.0">
+                  <TextField fx:id="fieldCliente" onKeyTyped="#justCharacters" prefHeight="25.0" prefWidth="200.0">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -51,7 +41,7 @@
             <HBox alignment="CENTER_RIGHT">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="TELÉFONO:  " />
-                  <TextField fx:id="fieldTelefono" prefHeight="25.0" prefWidth="200.0">
+                  <TextField fx:id="fieldTelefono" onKeyTyped="#justInteger" prefHeight="25.0" prefWidth="200.0">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -64,7 +54,7 @@
             <HBox alignment="CENTER_RIGHT">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nº LOCALIDADES:  " />
-                  <TextField fx:id="fieldLocalidades" prefHeight="25.0" prefWidth="200.0">
+                  <TextField fx:id="fieldLocalidades" onKeyTyped="#justLocalidades" prefHeight="25.0" prefWidth="200.0">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -77,11 +67,14 @@
             <HBox alignment="CENTER_RIGHT">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CAPACIDAD: " />
-                  <TextField fx:id="fieldCapacidadReservas" alignment="CENTER" prefHeight="38.0" prefWidth="78.0">
+                  <Label fx:id="labelCapacidad" alignment="CENTER" prefHeight="40.0" prefWidth="75.0">
+                     <font>
+                        <Font size="19.0" />
+                     </font>
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
-                  </TextField>
+                  </Label>
                   <Button fx:id="btnReservar2" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="60.0" prefWidth="151.0" text="RESERVAR" />
                </children>
                <VBox.margin>
