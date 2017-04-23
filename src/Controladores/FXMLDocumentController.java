@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -35,6 +36,7 @@ import javafx.scene.layout.VBox;
 import modelo.Pelicula;
 import modelo.Proyeccion;
 import modelo.Reserva;
+import sun.security.provider.ConfigFile;
 
 /**
  *
@@ -55,6 +57,9 @@ public class FXMLDocumentController implements Initializable, MiVentana {
 
     private void initPeliculas() {
         GridPane peliGrid = new GridPane();
+        peliGrid.setHgap(15);
+        peliGrid.setVgap(5);
+        peliGrid.setGridLinesVisible(false);
         int contador = 0;
         for (Pelicula p : Singleton.getDataBase().getPeliculas()) {
             ImageView peliImage = new ImageView();
@@ -127,8 +132,10 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             l.setStyle("-fx-font: 15 arial;");
             gp1.add(l, 4, 0);
             vb.getChildren().add(gp1);
+            // Creando GridPane proyecciones
             GridPane gp2 = new GridPane();
-            gp2.setGridLinesVisible(true);
+            gp2.setGridLinesVisible(false);
+            gp2.setVgap(10);
             int contador = 0;
             for (Proyeccion p : Singleton.getDataBase().getProyecciones()) {
                 DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -150,7 +157,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                     c4 = new ColumnConstraints();
                     c4.setPercentWidth(100 / 7);
                     c4.setHalignment(HPos.CENTER);
-                    gp2.getColumnConstraints().addAll(c0, c1, c2, c3, c4);
+                    gp2.getColumnConstraints().setAll(c0, c1, c2, c3, c4);
                     
                     // Colocando TITULO de las proyecciones
                     l = new Label(p.getPelicula().getTitulo());
@@ -166,10 +173,12 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                     
                     // Colocando y Creando CANDTIDAD de las proyecciones
                     HBox hb = new HBox(40);
+                    hb.setAlignment(Pos.CENTER);
                     Button btnRestarCantidad = new Button("-");
                     btnRestarCantidad.setPadding(new Insets(11, 22, 11, 22));
                     TextField fieldCantidad = new TextField("1");
                     fieldCantidad.setPrefWidth(50);
+                    fieldCantidad.setAlignment(Pos.CENTER);
                     Button btnSumarCantidad = new Button("+");
                     btnSumarCantidad.setPadding(new Insets(10, 20, 10, 20));
                     btnRestarCantidad.setOnAction(new EventHandler<ActionEvent>() {
@@ -177,9 +186,9 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                         public void handle(ActionEvent event) {
                             try {
                                 int valorActual = Integer.parseInt(fieldCantidad.getText());
-                                valorActual++;
-                                if (valorActual >= 216) {
-                                    valorActual = 216;
+                                valorActual--;
+                                if (valorActual > p.getSala().getCapacidad()) {
+                                    valorActual = p.getSala().getCapacidad();
                                 }
                                 if (valorActual <= 1) {
                                     valorActual = 1;
@@ -196,6 +205,13 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                         public void handle(KeyEvent event) {
                             if (!"0123456789".contains(event.getCharacter())) {
                                 event.consume();
+                                return;
+                            }
+                            if (Integer.parseInt(fieldCantidad.getText()+event.getCharacter()) > p.getSala().getCapacidad()) {
+                                event.consume();
+                            }
+                            if (Integer.parseInt(fieldCantidad.getText()+event.getCharacter()) == 0) {
+                                event.consume();
                             }
                         }
                     });
@@ -204,9 +220,9 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                         public void handle(ActionEvent event) {
                             try {
                                 int valorActual = Integer.parseInt(fieldCantidad.getText());
-                                valorActual--;
-                                if (valorActual >= 216) {
-                                    valorActual = 216;
+                                valorActual++;
+                                if (valorActual > p.getSala().getCapacidad()) {
+                                    valorActual = p.getSala().getCapacidad();
                                 }
                                 if (valorActual <= 1) {
                                     valorActual = 1;
@@ -243,6 +259,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             }
             ScrollPane sp = new ScrollPane();
             sp.setContent(gp2);
+            sp.setFitToWidth(true);
             vb.getChildren().add(sp);
         }
     }
