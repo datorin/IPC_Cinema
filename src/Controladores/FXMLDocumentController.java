@@ -7,7 +7,6 @@ package Controladores;
 
 import Util.CreadorVentanas;
 import Util.Singleton;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
@@ -33,10 +32,10 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import modelo.Pelicula;
 import modelo.Proyeccion;
 import modelo.Reserva;
-import sun.security.provider.ConfigFile;
 
 /**
  *
@@ -75,7 +74,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
 
                 Button btnReservar = new Button("RESERVAR");
                 btnReservar.setPadding(new Insets(10, 45, 10, 45));
-                
+
                 btnReservar.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
@@ -91,7 +90,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
         }
         contenedorPeliculas.setContent(peliGrid);
         contenedorPeliculas.setFitToWidth(true);
-        contenedorPeliculas.setPadding(new Insets(20,0,0,0));
+        contenedorPeliculas.setPadding(new Insets(20, 0, 0, 0));
     }
 
     /*private void initPeliculas() {
@@ -224,8 +223,9 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                             try {
                                 int valorActual = Integer.parseInt(fieldCantidad.getText());
                                 valorActual--;
-                                if (valorActual > p.getSala().getCapacidad()) {
-                                    valorActual = p.getSala().getCapacidad();
+                                int i = 0;
+                                if (valorActual > p.getSala().getCapacidad() - p.getReservas().stream().map((r) -> r.getNumLocalidades()).reduce(i, Integer::sum)) {
+                                    valorActual = p.getSala().getCapacidad() - p.getReservas().stream().map((r) -> r.getNumLocalidades()).reduce(i, Integer::sum);
                                 }
                                 if (valorActual <= 1) {
                                     valorActual = 1;
@@ -244,11 +244,17 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                                 event.consume();
                                 return;
                             }
-                            if (Integer.parseInt(fieldCantidad.getText() + event.getCharacter()) > p.getSala().getCapacidad()) {
+                            int i = 0;
+                            if (Integer.parseInt(fieldCantidad.getText() + event.getCharacter()) > p.getSala().getCapacidad()
+                                    - p.getReservas().stream().map((r) -> r.getNumLocalidades()).reduce(i, Integer::sum)) {
                                 event.consume();
+                                int valorActual = p.getSala().getCapacidad() - p.getReservas().stream().map((r) -> r.getNumLocalidades()).reduce(i, Integer::sum);
+                                String s = Integer.toString(valorActual);
+                                fieldCantidad.setText(s);
                             }
                             if (Integer.parseInt(fieldCantidad.getText() + event.getCharacter()) == 0) {
                                 event.consume();
+                                fieldCantidad.setText(Integer.toString(1));
                             }
                         }
                     });
@@ -258,8 +264,9 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                             try {
                                 int valorActual = Integer.parseInt(fieldCantidad.getText());
                                 valorActual++;
-                                if (valorActual > p.getSala().getCapacidad()) {
-                                    valorActual = p.getSala().getCapacidad();
+                                int i = 0;
+                                if (valorActual > p.getSala().getCapacidad() - p.getReservas().stream().map((r) -> r.getNumLocalidades()).reduce(i, Integer::sum)) {
+                                    valorActual = p.getSala().getCapacidad() - p.getReservas().stream().map((r) -> r.getNumLocalidades()).reduce(i, Integer::sum);
                                 }
                                 if (valorActual <= 1) {
                                     valorActual = 1;
@@ -311,7 +318,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
     @Override
     public void cerrar() {
         Node a = (Node) contenedorPeliculas.getParent();
-        a.getScene().getWindow().hide();
+        ((Stage) a.getScene().getWindow()).close();
     }
 
 }

@@ -5,6 +5,7 @@
  */
 package Controladores;
 
+import Util.CreadorVentanas;
 import Util.Singleton;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +15,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -22,9 +24,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 import modelo.Pelicula;
 import modelo.Proyeccion;
 import modelo.Reserva;
+import modelo.Sala;
 
 /**
  * FXML Controller class
@@ -33,7 +37,7 @@ import modelo.Reserva;
  */
 public class FXMLReservarController implements Initializable, MiVentana {
 
-    private Pelicula p;
+    private Pelicula pelicula;
     @FXML
     private Label nombrePeli;
     @FXML
@@ -52,11 +56,11 @@ public class FXMLReservarController implements Initializable, MiVentana {
     private Label labelCapacidad;
 
     public void init(Pelicula p) {
-        this.p = p;
+        this.pelicula = p;
         nombrePeli.setText(p.getTitulo());
-        DiaPelicula();
-        HoraPelicula(comboDia.getSelectionModel().getSelectedItem());
-        CapacidadProyeccion(comboDia.getSelectionModel().getSelectedItem(), comboProyecciones.getSelectionModel().getSelectedItem());
+        diaPelicula();
+        horaPelicula(comboDia.getSelectionModel().getSelectedItem());
+        refrescar();
     }
 
     /**
@@ -67,27 +71,33 @@ public class FXMLReservarController implements Initializable, MiVentana {
         comboDia.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                HoraPelicula(newValue);
+                horaPelicula(newValue);
                 System.out.println("He cambiao");
+            }
+        });
+        comboProyecciones.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                refrescar();
             }
         });
     }
 
     @Override
     public void refrescar() {
-        init(p);
+        capacidadProyeccion(comboDia.getSelectionModel().getSelectedItem(), comboProyecciones.getSelectionModel().getSelectedItem());
     }
 
     @Override
     public void cerrar() {
         Node a = (Node) nombrePeli.getParent();
-        a.getScene().getWindow().hide();
+        ((Stage) a.getScene().getWindow()).close();
     }
 
-    private void DiaPelicula() {
+    private void diaPelicula() {
         ArrayList<Proyeccion> proyecciones = new ArrayList<>();
         for (Proyeccion pro : Singleton.getDataBase().getProyecciones()) {
-            if (pro.getPelicula().getTitulo().equals(p.getTitulo())) {
+            if (pro.getPelicula().getTitulo().equals(pelicula.getTitulo())) {
                 proyecciones.add(pro);
             }
         }
@@ -102,28 +112,30 @@ public class FXMLReservarController implements Initializable, MiVentana {
         ObservableList<String> ob = FXCollections.observableArrayList(dias);
         comboDia.setItems(ob);
         comboDia.getSelectionModel().select(0);
+        refrescar();
     }
 
-    private void HoraPelicula(String dia) {
+    private void horaPelicula(String dia) {
         ArrayList<String> horas = new ArrayList<>();
         for (Proyeccion pr : Singleton.getDataBase().getProyecciones()) {
             DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             String st_dt = dt.format(pr.getDia());
-            if (pr.getPelicula().getTitulo().equals(p.getTitulo()) && st_dt.equals(dia)) {
+            if (pr.getPelicula().getTitulo().equals(pelicula.getTitulo()) && st_dt.equals(dia)) {
                 horas.add(pr.getHoraInicio());
             }
         }
         ObservableList<String> ob = FXCollections.observableArrayList(horas);
         comboProyecciones.setItems(ob);
         comboProyecciones.getSelectionModel().select(0);
+        refrescar();
     }
 
-    private void CapacidadProyeccion(String dia, String hora) {
+    private void capacidadProyeccion(String dia, String hora) {
         Proyeccion proyeccion = null;
         for (Proyeccion p : Singleton.getDataBase().getProyecciones()) {
             DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             String st_dt = dt.format(p.getDia());
-            if (p.getPelicula().getTitulo().equals(this.p.getTitulo()) && st_dt.equals(dia) && p.getHoraInicio().equals(hora)) {
+            if (p.getPelicula().getTitulo().equals(this.pelicula.getTitulo()) && st_dt.equals(dia) && p.getHoraInicio().equals(hora)) {
                 proyeccion = p;
                 break;
             }
@@ -161,5 +173,26 @@ public class FXMLReservarController implements Initializable, MiVentana {
         if (!"qwertyuiopasdfghjklñzxcvbnmQWERTYUIOPASDFGHJKLÑZXCVBNM ".contains(event.getCharacter())) {
             event.consume();
         }
+    }
+
+    @FXML
+    private void onReservar(ActionEvent event) {
+        ArrayList<Proyeccion> proyecciones = new ArrayList<>();
+        for (Proyeccion pro : Singleton.getDataBase().getProyecciones()) {
+            if (pro.getPelicula().getTitulo().equals(pelicula.getTitulo())) {
+                proyecciones.add(pro);
+            }
+        }
+        Proyeccion proyeccionAReservar = null;
+        for (Proyeccion pro : proyecciones) {
+            DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            String st_dt = dt.format(pro.getDia());
+            if(st_dt.equals(comboDia.getSelectionModel().getSelectedItem()) && pro.getHoraInicio().equals(comboProyecciones.getSelectionModel().getSelectedItem())){
+                proyeccionAReservar = pro;
+            }
+        }
+        proyeccionAReservar.addReserva(new Reserva(fieldCliente.getText(), fieldTelefono.getText(), Integer.parseInt(fieldLocalidades.getText())));
+        cerrar();
+        CreadorVentanas.refrescarTodas();
     }
 }

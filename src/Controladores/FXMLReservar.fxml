@@ -67,7 +67,7 @@
             <HBox alignment="CENTER_RIGHT">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CAPACIDAD: " />
-                  <Label fx:id="labelCapacidad" alignment="CENTER" prefHeight="40.0" prefWidth="75.0">
+                  <Label fx:id="labelCapacidad" alignment="CENTER" prefHeight="40.0" prefWidth="90.0" text="0/216">
                      <font>
                         <Font size="19.0" />
                      </font>
@@ -75,7 +75,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Button fx:id="btnReservar2" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="60.0" prefWidth="151.0" text="RESERVAR" />
+                  <Button fx:id="btnReservar2" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onReservar" prefHeight="60.0" prefWidth="151.0" text="RESERVAR" />
                </children>
                <VBox.margin>
                   <Insets bottom="20.0" left="5.0" right="5.0" top="10.0" />

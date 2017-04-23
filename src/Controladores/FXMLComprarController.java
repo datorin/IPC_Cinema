@@ -5,21 +5,26 @@
  */
 package Controladores;
 
+import Util.Singleton;
 import java.io.InputStream;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import modelo.Proyeccion;
+import modelo.Reserva;
 
 /**
  * FXML Controller class
@@ -36,6 +41,8 @@ public class FXMLComprarController implements Initializable, MiVentana {
     private BorderPane borderPaneComprar;
     @FXML
     private TextField fielLocalidades;
+    @FXML
+    private Label labelCapacidad;
 
     /**
      * Initializes the controller class.
@@ -48,24 +55,25 @@ public class FXMLComprarController implements Initializable, MiVentana {
     public void init(Proyeccion p) {
         this.p = p;
         makeGridAsientos();
+        refrescar();
     }
 
     @Override
     public void refrescar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        capacidadProyeccion();
     }
 
     @Override
     public void cerrar() {
         Node a = (Node) btnComprar.getParent();
-        a.getScene().getWindow().hide();
+        ((Stage) a.getScene().getWindow()).close();
     }
 
     private void makeGridAsientos() {
         GridPane gp = new GridPane();
         gp.setGridLinesVisible(false);
-        gp.setHgap(1);
-        gp.setVgap(1);
+        gp.setHgap(3);
+        gp.setVgap(5);
         gp.setPadding(new Insets(10, 10, 10, 10));
         for (int i = 0; i < 12; i++) {
             for (int j = 0; j < 18; j++) {
@@ -92,5 +100,13 @@ public class FXMLComprarController implements Initializable, MiVentana {
         if (Integer.parseInt(fielLocalidades.getText() + event.getCharacter()) == 0) {
             event.consume();
         }
+    }
+
+    private void capacidadProyeccion() {
+        int reservas = 0;
+        for (Reserva r : p.getReservas()) {
+            reservas += r.getNumLocalidades();
+        }
+         labelCapacidad.setText(Integer.toString(reservas + p.getSala().getEntradasVendidas()) + " / " + p.getSala().getCapacidad());
     }
 }

@@ -28,13 +28,13 @@ import modelo.Proyeccion;
  * @author Daniel
  */
 public class CreadorVentanas {
-    
+
     private static final ListaVentanas listVent = new ListaVentanas();
-    
-    private CreadorVentanas(){
-        
+
+    private CreadorVentanas() {
+
     }
-    
+
     public static FXMLDocumentController crearOrigen() {
         FXMLDocumentController fdc = null;
         try {
@@ -43,7 +43,7 @@ public class CreadorVentanas {
             fdc = myLoader.<FXMLDocumentController>getController();
             Scene scene = new Scene(root);
             Stage stageDocument = new Stage();
-            listVent.addVentana((MiVentana)fdc, stageDocument);
+            listVent.addVentana((MiVentana) fdc, stageDocument);
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             double width = screenSize.getWidth();
             double height = screenSize.getHeight();
@@ -54,24 +54,27 @@ public class CreadorVentanas {
             stageDocument.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
-                    if (listVent.getVentanasAbiertas().size() != 1) {
-                        Alert al = new Alert(Alert.AlertType.CONFIRMATION);
-                        al.setTitle("CERRANDO VENTANAS");
-                        al.setHeaderText("Se van a cerrar todas las ventanas.");
-                        al.setContentText("¿Está usted seguro?");
-                        al.showAndWait();
-                        if(al.resultProperty().get() == ButtonType.OK) {cerrarTodas();}
-                        else {event.consume();}
+                    Alert al = new Alert(Alert.AlertType.CONFIRMATION);
+                    al.setTitle("CERRANDO VENTANAS");
+                    al.setHeaderText("Se van a cerrar todas las ventanas.");
+                    al.setContentText("¿Está usted seguro?");
+                    al.showAndWait();
+                    if (al.resultProperty().get() == ButtonType.OK) {
+                        cerrarTodas();
+                    } else {
+                        event.consume();
                     }
                 }
             });
             stageDocument.setScene(scene);
             stageDocument.initModality(Modality.WINDOW_MODAL);
             stageDocument.show();
-        } catch(Exception e) {e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return fdc;
     }
-    
+
     public static FXMLComprarController crearComprar(Proyeccion p) {
         FXMLComprarController fdc = null;
         try {
@@ -81,14 +84,17 @@ public class CreadorVentanas {
             fdc.init(p);
             Scene scene = new Scene(root);
             Stage stageComprar = new Stage();
-            listVent.addVentana((MiVentana)fdc, stageComprar);
+            listVent.addVentana((MiVentana) fdc, stageComprar);
             stageComprar.setScene(scene);
             stageComprar.initModality(Modality.WINDOW_MODAL);
             stageComprar.show();
-        } catch(Exception e) {e.printStackTrace();}
+            stageComprar.setResizable(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return fdc;
     }
-    
+
     public static FXMLReservarController crearReservar(Pelicula p) {
         FXMLReservarController fdc = null;
         try {
@@ -98,19 +104,26 @@ public class CreadorVentanas {
             fdc.init(p);
             Scene scene = new Scene(root);
             Stage stageReservar = new Stage();
-            listVent.addVentana((MiVentana)fdc, stageReservar);
+            listVent.addVentana((MiVentana) fdc, stageReservar);
             stageReservar.setScene(scene);
             stageReservar.initModality(Modality.WINDOW_MODAL);
             stageReservar.show();
-        } catch(Exception e) {e.printStackTrace();}
+            stageReservar.setResizable(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return fdc;
     }
-    
-    public static void cerrarTodas(){
-        for(MiVentana mv : listVent.getVentanasAbiertas()) mv.cerrar();
+
+    public static void cerrarTodas() {
+        for (MiVentana mv : listVent.getVentanasAbiertas()) {
+            mv.cerrar();
+        }
     }
-    
-    public static void refrescarTodas(){
-        for(MiVentana mv : listVent.getVentanasAbiertas()) mv.refrescar();
+
+    public static void refrescarTodas() {
+        for (MiVentana mv : listVent.getVentanasAbiertas()) {
+            mv.refrescar();
+        }
     }
 }
