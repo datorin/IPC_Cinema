@@ -21,6 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import modelo.Pelicula;
+import modelo.Proyeccion;
 
 /**
  *
@@ -53,13 +54,15 @@ public class CreadorVentanas {
             stageDocument.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
-                    Alert al = new Alert(Alert.AlertType.CONFIRMATION);
-                    al.setTitle("CERRANDO VENTANAS");
-                    al.setHeaderText("Se van a cerrar todas las ventanas.");
-                    al.setContentText("¿Está usted seguro?");
-                    al.showAndWait();
-                    if(al.resultProperty().get() == ButtonType.OK) {cerrarTodas();}
-                    else {event.consume();}
+                    if (listVent.getVentanasAbiertas().size() != 1) {
+                        Alert al = new Alert(Alert.AlertType.CONFIRMATION);
+                        al.setTitle("CERRANDO VENTANAS");
+                        al.setHeaderText("Se van a cerrar todas las ventanas.");
+                        al.setContentText("¿Está usted seguro?");
+                        al.showAndWait();
+                        if(al.resultProperty().get() == ButtonType.OK) {cerrarTodas();}
+                        else {event.consume();}
+                    }
                 }
             });
             stageDocument.setScene(scene);
@@ -69,12 +72,13 @@ public class CreadorVentanas {
         return fdc;
     }
     
-    public static FXMLComprarController crearComprar() {
+    public static FXMLComprarController crearComprar(Proyeccion p) {
         FXMLComprarController fdc = null;
         try {
             FXMLLoader myLoader = new FXMLLoader(Object.class.getResource("/Controladores/FXMLComprar.fxml"));
             Parent root = (Parent) myLoader.load();
             fdc = myLoader.<FXMLComprarController>getController();
+            fdc.init(p);
             Scene scene = new Scene(root);
             Stage stageComprar = new Stage();
             listVent.addVentana((MiVentana)fdc, stageComprar);

@@ -10,9 +10,8 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
+import modelo.Proyeccion;
 
 /**
  * FXML Controller class
@@ -24,6 +23,8 @@ public class FXMLComprarController implements Initializable, MiVentana {
     @FXML
     private Button btnComprar;
     
+    private Proyeccion p;
+    
     /**
      * Initializes the controller class.
      */
@@ -31,15 +32,9 @@ public class FXMLComprarController implements Initializable, MiVentana {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
-
-    private Stage stageO;
-    private Scene scenePrev;
-    private String tituloPrev;
-
-    public void stageOrigen(Stage stage) {
-        stageO = stage;
-        scenePrev = stage.getScene();
-        tituloPrev = stage.getTitle();
+    
+    public void init(Proyeccion p) {
+        this.p = p;
     }
 
     @Override
