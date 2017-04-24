@@ -100,48 +100,48 @@ public class FXMLComprarController implements Initializable, MiVentana {
         ((Stage) a.getScene().getWindow()).close();
     }
 
-    private void makeGridAsientos() {
+        private void makeGridAsientos() {
         GridPane gp = new GridPane();
         gp.setGridLinesVisible(false);
         gp.setHgap(3);
         gp.setVgap(5);
         gp.setPadding(new Insets(10, 10, 10, 10));
+        for (int cont = 1; cont <= 18; cont++) {
+            Label l = new Label(Integer.toString(cont));
+            l.setPadding(new Insets(10, 10, 10, 15));
+            l.setStyle("-fx-font: 15 arial;");
+            gp.add(l, 0, cont);
+        }
+        for (int cont = 1; cont <= 12; cont++) {
+            Label l = new Label(Integer.toString(cont));
+            l.setPadding(new Insets(10, 10, 10, 15));
+            l.setStyle("-fx-font: 15 arial;");
+            gp.add(l, cont, 0);
+        }
         for (int i = 0; i < 18; i++) {
             for (int j = 0; j < 12; j++) {
                 ImageView peliImage = new ImageView();
-                if (i == 0) {
-                    Label l = new Label(Integer.toString(j + 1));
-                    l.setPadding(new Insets(10, 10, 10, 15));
-                    l.setStyle("-fx-font: 15 arial;");
-                    gp.add(l, j, i);
+                // Creando Asientos
+                if (p.getSala().getLocalidades()[i][j] == Sala.localidad.vendida) {
+                    ocupadas.add(new Tupla(i, j));
+                    InputStream is = this.getClass().getResourceAsStream("/Imagenes/butacaOcupada.png");
+                    Image image = new Image(is, 38, 45.5, true, true);
+                    peliImage.setImage(image);
                 } else {
-                    if (j == 0) {
-                        Label l = new Label(Integer.toString(i + 1));
-                        l.setPadding(new Insets(10, 10, 10, 15));
-                        l.setStyle("-fx-font: 15 arial;");
-                        gp.add(l, j, i);
-                    } else {
-                        // Creando Asientos
-                        if (p.getSala().getLocalidades()[i][j] == Sala.localidad.vendida) {
-                            ocupadas.add(new Tupla(i, j));
-                            InputStream is = this.getClass().getResourceAsStream("/Imagenes/butacaOcupada.png");
-                            Image image = new Image(is, 38, 45.5, true, true);
-                            peliImage.setImage(image);
-                        } else {
-                            InputStream is = this.getClass().getResourceAsStream("/Imagenes/butacaVacia.png");
-                            Image image = new Image(is, 38, 45.5, true, true);
-                            peliImage.setImage(image);
-                        }
-                    }
+                    InputStream is = this.getClass().getResourceAsStream("/Imagenes/butacaVacia.png");
+                    Image image = new Image(is, 38, 45.5, true, true);
+                    peliImage.setImage(image);
                 }
 
-                gp.add(peliImage, j, i);
+                gp.add(peliImage, j+1, i+1);
 
                 new ImagenLocalidad(peliImage, i, j, seleccionados, ocupadas, fieldLocalidades);
             }
         }
         borderPaneComprar.setCenter(gp);
+
     }
+
 
     @FXML
     private void justLocalidades(KeyEvent event) {

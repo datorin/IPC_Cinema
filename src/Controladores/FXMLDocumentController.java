@@ -419,6 +419,17 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                         al.setContentText("¿Está usted seguro?");
                         al.showAndWait();
                         if (al.resultProperty().get() == ButtonType.OK) {
+                            Proyeccion pp = new Proyeccion();
+                            for (Proyeccion pro : Singleton.getDataBase().getProyecciones()) {
+                                for (Reserva re : pro.getReservas()) {
+                                    if (r == re) {
+                                        pp = pro;
+                                        break;
+                                    }
+                                }
+                            }
+                            pp.getReservas().remove(r);
+                            CreadorVentanas.refrescarTodas();
                         }
                     }
                 });
