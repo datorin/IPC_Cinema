@@ -93,34 +93,6 @@ public class FXMLDocumentController implements Initializable, MiVentana {
         contenedorPeliculas.setPadding(new Insets(20, 0, 0, 0));
     }
 
-    /*private void initPeliculas() {
-        GridPane peliGrid = new GridPane();
-        peliGrid.setHgap(15);
-        peliGrid.setVgap(5);
-        peliGrid.setGridLinesVisible(false);
-        int contador = 0;
-        for (Pelicula p : Singleton.getDataBase().getPeliculas()) {
-            ImageView peliImage = new ImageView();
-            try {
-                InputStream is = this.getClass().getResourceAsStream(p.getPathImage());
-                Image image = new Image(is, 330, 220, true, true);
-                peliImage.setImage(image);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            peliGrid.add(peliImage, contador, 0);
-            Button btnReservar = new Button("RESERVAR");
-            btnReservar.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    CreadorVentanas.crearReservar(p);
-                }
-            });
-            peliGrid.add(btnReservar, contador, 1);
-            contador++;
-        }
-        contenedorPeliculas.setContent(peliGrid);
-    }*/
     private void initActualidad() {
         TabPane root = new TabPane();
         tabActualidad.setContent(root);
@@ -131,20 +103,21 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             VBox vb = new VBox();
             tb.setContent(vb);
             GridPane gp1 = new GridPane();
+            gp1.setPadding(new Insets(0, 13.5, 0, 0));
             ColumnConstraints c0 = new ColumnConstraints();
-            c0.setPercentWidth(200 / 7);
+            c0.setPercentWidth(200 / 6);
             c0.setHalignment(HPos.CENTER);
             ColumnConstraints c1 = new ColumnConstraints();
-            c1.setPercentWidth(100 / 7);
+            c1.setPercentWidth(100 / 6);
             c1.setHalignment(HPos.CENTER);
             ColumnConstraints c2 = new ColumnConstraints();
-            c2.setPercentWidth(200 / 7);
+            c2.setPercentWidth(200 / 6);
             c2.setHalignment(HPos.CENTER);
             ColumnConstraints c3 = new ColumnConstraints();
-            c3.setPercentWidth(100 / 7);
+            c3.setPercentWidth(100 / 6);
             c3.setHalignment(HPos.CENTER);
             ColumnConstraints c4 = new ColumnConstraints();
-            c4.setPercentWidth(100 / 7);
+            c4.setPercentWidth(100 / 6);
             c4.setHalignment(HPos.CENTER);
             gp1.getColumnConstraints().addAll(c0, c1, c2, c3, c4);
             Label l = new Label("TÍTULO DE LAS PELÍCULAS");
@@ -170,7 +143,6 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             vb.getChildren().add(gp1);
             // Creando GridPane proyecciones
             GridPane gp2 = new GridPane();
-            gp2.setGridLinesVisible(false);
             gp2.setVgap(10);
             int contador = 0;
             for (Proyeccion p : Singleton.getDataBase().getProyecciones()) {
@@ -296,7 +268,8 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                     btnComprar.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            CreadorVentanas.crearComprar(p);
+                            CreadorVentanas.crearComprar(p,fieldCantidad.getText());
+                            fieldCantidad.setText(Integer.toString(1));
                         }
                     });
                     gp2.add(btnComprar, 4, contador);

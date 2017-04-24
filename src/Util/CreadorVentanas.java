@@ -75,13 +75,13 @@ public class CreadorVentanas {
         return fdc;
     }
 
-    public static FXMLComprarController crearComprar(Proyeccion p) {
+    public static FXMLComprarController crearComprar(Proyeccion p, String s) {
         FXMLComprarController fdc = null;
         try {
             FXMLLoader myLoader = new FXMLLoader(Object.class.getResource("/Controladores/FXMLComprar.fxml"));
             Parent root = (Parent) myLoader.load();
             fdc = myLoader.<FXMLComprarController>getController();
-            fdc.init(p);
+            fdc.init(p,s);
             Scene scene = new Scene(root);
             Stage stageComprar = new Stage();
             listVent.addVentana((MiVentana) fdc, stageComprar);

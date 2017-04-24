@@ -131,6 +131,7 @@ public class FXMLReservarController implements Initializable, MiVentana {
     }
 
     private void capacidadProyeccion(String dia, String hora) {
+        if (dia == null || hora == null) {return;}
         Proyeccion proyeccion = null;
         for (Proyeccion p : Singleton.getDataBase().getProyecciones()) {
             DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy");

@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -36,6 +37,8 @@ public class FXMLComprarController implements Initializable, MiVentana {
     @FXML
     private Button btnComprar;
 
+    private String s;
+    
     private Proyeccion p;
     @FXML
     private BorderPane borderPaneComprar;
@@ -43,6 +46,10 @@ public class FXMLComprarController implements Initializable, MiVentana {
     private TextField fielLocalidades;
     @FXML
     private Label labelCapacidad;
+    @FXML
+    private Button brnRestarLocalidades;
+    @FXML
+    private Button btnSumarLocalidades;
 
     /**
      * Initializes the controller class.
@@ -52,8 +59,9 @@ public class FXMLComprarController implements Initializable, MiVentana {
         // TODO
     }
 
-    public void init(Proyeccion p) {
+    public void init(Proyeccion p, String s) {
         this.p = p;
+        this.s = s;
         makeGridAsientos();
         refrescar();
     }
@@ -61,6 +69,7 @@ public class FXMLComprarController implements Initializable, MiVentana {
     @Override
     public void refrescar() {
         capacidadProyeccion();
+        numLocalidades(s);
     }
 
     @Override
@@ -108,5 +117,17 @@ public class FXMLComprarController implements Initializable, MiVentana {
             reservas += r.getNumLocalidades();
         }
          labelCapacidad.setText(Integer.toString(reservas + p.getSala().getEntradasVendidas()) + " / " + p.getSala().getCapacidad());
+    }
+    
+    private void numLocalidades(String s){
+        fielLocalidades.setText(s);
+    }
+
+    @FXML
+    private void onRestarLocalidades(ActionEvent event) {
+    }
+
+    @FXML
+    private void onSumarLocalidades(ActionEvent event) {
     }
 }
