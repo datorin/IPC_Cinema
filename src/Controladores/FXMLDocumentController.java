@@ -133,7 +133,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             l.setPadding(new Insets(15, 15, 15, 15));
             l.setStyle("-fx-font: 15 arial;");
             gp1.add(l, 1, 0);
-            l = new Label("CANTIDAD");
+            l = new Label("NUM LOCALIDADES");
             l.setPadding(new Insets(15, 15, 15, 15));
             l.setStyle("-fx-font: 15 arial;");
             gp1.add(l, 2, 0);
@@ -301,7 +301,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             VBox vb = new VBox();
             tb.setContent(vb);
             GridPane gp1 = new GridPane();
-            gp1.setPadding(new Insets(0,13.5,0,0));
+            gp1.setPadding(new Insets(0, 13.5, 0, 0));
             ColumnConstraints c0 = new ColumnConstraints();
             c0.setPercentWidth(200 / 6);
             c0.setHalignment(HPos.CENTER);
@@ -309,15 +309,18 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             c1.setPercentWidth(100 / 6);
             c1.setHalignment(HPos.CENTER);
             ColumnConstraints c2 = new ColumnConstraints();
-            c2.setPercentWidth(200 / 6);
+            c2.setPercentWidth(100 / 6);
             c2.setHalignment(HPos.CENTER);
             ColumnConstraints c3 = new ColumnConstraints();
-            c3.setPercentWidth(100 / 6);
+            c3.setPercentWidth(200 / 6);
             c3.setHalignment(HPos.CENTER);
             ColumnConstraints c4 = new ColumnConstraints();
             c4.setPercentWidth(100 / 6);
             c4.setHalignment(HPos.CENTER);
-            gp1.getColumnConstraints().addAll(c0, c1, c2, c3, c4);
+            ColumnConstraints c5 = new ColumnConstraints();
+            c5.setPercentWidth(100 / 6);
+            c5.setHalignment(HPos.CENTER);
+            gp1.getColumnConstraints().addAll(c0, c1, c2, c3, c4, c5);
             Label l = new Label("NOMBRE");
             l.setPadding(new Insets(15, 15, 15, 15));
             l.setStyle("-fx-font: 15 arial;");
@@ -326,42 +329,49 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             l.setPadding(new Insets(15, 15, 15, 15));
             l.setStyle("-fx-font: 15 arial;");
             gp1.add(l, 1, 0);
-            l = new Label("NUM LOCALIDADES");
+            l = new Label("Nº LOCALID.");
             l.setPadding(new Insets(15, 15, 15, 15));
             l.setStyle("-fx-font: 15 arial;");
             gp1.add(l, 2, 0);
-            l = new Label("CANCELAR");
+            l = new Label("TÍTULO DE LAS PELÍCULAS");
             l.setPadding(new Insets(15, 15, 15, 15));
             l.setStyle("-fx-font: 15 arial;");
             gp1.add(l, 3, 0);
-            l = new Label("COMPRAR");
+            l = new Label("CANCELAR");
             l.setPadding(new Insets(15, 15, 15, 15));
             l.setStyle("-fx-font: 15 arial;");
             gp1.add(l, 4, 0);
+            l = new Label("COMPRAR");
+            l.setPadding(new Insets(15, 15, 15, 15));
+            l.setStyle("-fx-font: 15 arial;");
+            gp1.add(l, 5, 0);
             vb.getChildren().add(gp1);
             // Creando GridPane reservas
             GridPane gp2 = new GridPane();
             gp2.setVgap(10);
             int contador = 0;
             for (Reserva r : Singleton.getDataBase().getTodasReservas()) {
-                
+
                 // Creando las columna de la GridPane
                 c0 = new ColumnConstraints();
-                c0.setPercentWidth(200 / 6);
+                c0.setPercentWidth(200 / 7);
                 c0.setHalignment(HPos.LEFT);
                 c1 = new ColumnConstraints();
-                c1.setPercentWidth(100 / 6);
+                c1.setPercentWidth(100 / 7);
                 c1.setHalignment(HPos.CENTER);
                 c2 = new ColumnConstraints();
-                c2.setPercentWidth(200 / 6);
+                c2.setPercentWidth(100 / 7);
                 c2.setHalignment(HPos.CENTER);
                 c3 = new ColumnConstraints();
-                c3.setPercentWidth(100 / 6);
+                c3.setPercentWidth(200 / 7);
                 c3.setHalignment(HPos.CENTER);
                 c4 = new ColumnConstraints();
-                c4.setPercentWidth(100 / 6);
+                c4.setPercentWidth(100 / 7);
                 c4.setHalignment(HPos.CENTER);
-                gp2.getColumnConstraints().setAll(c0, c1, c2, c3, c4);
+                c5 = new ColumnConstraints();
+                c5.setPercentWidth(100 / 7);
+                c5.setHalignment(HPos.CENTER);
+                gp2.getColumnConstraints().setAll(c0, c1, c2, c3, c4, c5);
 
                 // Colocando nombres reservas
                 l = new Label(r.getNombre());
@@ -381,6 +391,21 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                 l.setStyle("-fx-font: 15 arial;");
                 gp2.add(l, 2, contador);
 
+                // Colocando nombre peliculas reservas
+                Proyeccion pp = new Proyeccion();
+                for (Proyeccion pro : Singleton.getDataBase().getProyecciones()) {
+                    for (Reserva re : pro.getReservas()) {
+                        if (r == re) {
+                            pp = pro;
+                            break;
+                        }
+                    }
+                }
+                l = new Label(pp.getPelicula().getTitulo());
+                l.setPadding(new Insets(15, 15, 15, 15));
+                l.setStyle("-fx-font: 15 arial;");
+                gp2.add(l, 3, contador);
+
                 // Colocando y Creando el boton CANCELAR de las reservas
                 Button btnReservar = new Button("CANCELAR");
                 btnReservar.setPadding(new Insets(10, 10, 10, 10));
@@ -397,7 +422,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                         }
                     }
                 });
-                gp2.add(btnReservar, 3, contador);
+                gp2.add(btnReservar, 4, contador);
 
                 // Colocando y Creando el boton COMPRAR de las reservas
                 Button btnComprar = new Button("COMPRAR");
@@ -409,7 +434,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                         CreadorVentanas.crearComprarReservar(r);
                     }
                 });
-                gp2.add(btnComprar, 4, contador);
+                gp2.add(btnComprar, 5, contador);
                 contador++;
 
             }
