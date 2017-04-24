@@ -6,6 +6,7 @@
 package Controladores;
 
 import Util.CreadorVentanas;
+import static Util.CreadorVentanas.cerrarTodas;
 import Util.Singleton;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
@@ -19,12 +20,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import modelo.Pelicula;
 import modelo.Proyeccion;
 import modelo.Reserva;
@@ -45,11 +49,11 @@ public class FXMLReservarController implements Initializable, MiVentana {
     @FXML
     private ComboBox<String> comboProyecciones;
     @FXML
-    private TextField fieldCliente;
+    private TextField fieldCliente = null;
     @FXML
-    private TextField fieldTelefono;
+    private TextField fieldTelefono = null;
     @FXML
-    private TextField fieldLocalidades;
+    private TextField fieldLocalidades = null;
     @FXML
     private Button btnReservar2;
     @FXML
@@ -178,22 +182,35 @@ public class FXMLReservarController implements Initializable, MiVentana {
 
     @FXML
     private void onReservar(ActionEvent event) {
-        ArrayList<Proyeccion> proyecciones = new ArrayList<>();
-        for (Proyeccion pro : Singleton.getDataBase().getProyecciones()) {
-            if (pro.getPelicula().getTitulo().equals(pelicula.getTitulo())) {
-                proyecciones.add(pro);
-            }
+        if(fieldCliente.getText().equals("") || fieldTelefono.getText().equals("") || fieldLocalidades.getText().equals("")){
+           Alert al = new Alert(Alert.AlertType.ERROR);
+                    al.setTitle("ERROR");
+                    al.setHeaderText("NO SE HA PODIDO COMPLETAR LA RESERVA ");
+                    al.setContentText("FALTAN CAMPOS DE RESERVA POR RELLENAR.");
+                    al.showAndWait();
+                    if (al.resultProperty().get() == ButtonType.OK) {
+                        event.consume();
+                    } 
         }
-        Proyeccion proyeccionAReservar = null;
-        for (Proyeccion pro : proyecciones) {
-            DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            String st_dt = dt.format(pro.getDia());
-            if(st_dt.equals(comboDia.getSelectionModel().getSelectedItem()) && pro.getHoraInicio().equals(comboProyecciones.getSelectionModel().getSelectedItem())){
-                proyeccionAReservar = pro;
+        else{
+            ArrayList<Proyeccion> proyecciones = new ArrayList<>();
+            for (Proyeccion pro : Singleton.getDataBase().getProyecciones()) {
+                if (pro.getPelicula().getTitulo().equals(pelicula.getTitulo())) {
+                    proyecciones.add(pro);
+                }
             }
+            Proyeccion proyeccionAReservar = null;
+            for (Proyeccion pro : proyecciones) {
+                DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                String st_dt = dt.format(pro.getDia());
+                if(st_dt.equals(comboDia.getSelectionModel().getSelectedItem()) && pro.getHoraInicio().equals(comboProyecciones.getSelectionModel().getSelectedItem())){
+                    proyeccionAReservar = pro;
+                }
+            }
+            proyeccionAReservar.addReserva(new Reserva(fieldCliente.getText(), fieldTelefono.getText(), Integer.parseInt(fieldLocalidades.getText())));
+            cerrar();
+            CreadorVentanas.refrescarTodas();
         }
-        proyeccionAReservar.addReserva(new Reserva(fieldCliente.getText(), fieldTelefono.getText(), Integer.parseInt(fieldLocalidades.getText())));
-        cerrar();
-        CreadorVentanas.refrescarTodas();
     }
+        
 }
