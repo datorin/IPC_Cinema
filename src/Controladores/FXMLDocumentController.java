@@ -19,7 +19,9 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
@@ -274,7 +276,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                             if (fieldCantidad.getText().isEmpty()) {
                                 fieldCantidad.setText(Integer.toString(1));
                             }
-                            CreadorVentanas.crearComprar(p,fieldCantidad.getText());
+                            CreadorVentanas.crearComprar(p, fieldCantidad.getText());
                             fieldCantidad.setText(Integer.toString(1));
                         }
                     });
@@ -288,7 +290,8 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             vb.getChildren().add(sp);
         }
     }
-    private void initVerReservas(){
+
+    private void initVerReservas() {
         TabPane root = new TabPane();
         tabVerReservas.setContent(root);
         for (String s : Singleton.getDataBase().getDias()) {
@@ -298,7 +301,7 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             VBox vb = new VBox();
             tb.setContent(vb);
             GridPane gp1 = new GridPane();
-            gp1.setPadding(new Insets(0, 13.5, 0, 0));
+            gp1.setPadding(new Insets(0,13.5,0,0));
             ColumnConstraints c0 = new ColumnConstraints();
             c0.setPercentWidth(200 / 6);
             c0.setHalignment(HPos.CENTER);
@@ -336,55 +339,94 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             l.setStyle("-fx-font: 15 arial;");
             gp1.add(l, 4, 0);
             vb.getChildren().add(gp1);
-            // Creando GridPane proyecciones
+            // Creando GridPane reservas
             GridPane gp2 = new GridPane();
             gp2.setVgap(10);
             int contador = 0;
             for (Reserva r : Singleton.getDataBase().getTodasReservas()) {
-               
                 
-                    // Creando las columna de la GridPane
-                    c0 = new ColumnConstraints();
-                    c0.setPercentWidth(200 / 6);
-                    c0.setHalignment(HPos.LEFT);
-                    c1 = new ColumnConstraints();
-                    c1.setPercentWidth(100 / 6);
-                    c1.setHalignment(HPos.CENTER);
-                    c2 = new ColumnConstraints();
-                    c2.setPercentWidth(200 / 6);
-                    c2.setHalignment(HPos.CENTER);
-                    c3 = new ColumnConstraints();
-                    c3.setPercentWidth(100 / 6);
-                    c3.setHalignment(HPos.CENTER);
-                    c4 = new ColumnConstraints();
-                    c4.setPercentWidth(100 / 6);
-                    c4.setHalignment(HPos.CENTER);
-                    gp2.getColumnConstraints().setAll(c0, c1, c2, c3, c4);
+                // Creando las columna de la GridPane
+                c0 = new ColumnConstraints();
+                c0.setPercentWidth(200 / 6);
+                c0.setHalignment(HPos.LEFT);
+                c1 = new ColumnConstraints();
+                c1.setPercentWidth(100 / 6);
+                c1.setHalignment(HPos.CENTER);
+                c2 = new ColumnConstraints();
+                c2.setPercentWidth(200 / 6);
+                c2.setHalignment(HPos.CENTER);
+                c3 = new ColumnConstraints();
+                c3.setPercentWidth(100 / 6);
+                c3.setHalignment(HPos.CENTER);
+                c4 = new ColumnConstraints();
+                c4.setPercentWidth(100 / 6);
+                c4.setHalignment(HPos.CENTER);
+                gp2.getColumnConstraints().setAll(c0, c1, c2, c3, c4);
 
-                    // Colocando nombres
-                    l = new Label(r.getNombre());
-                    l.setPadding(new Insets(15, 15, 15, 15));
-                    l.setStyle("-fx-font: 15 arial;");
-                    gp2.add(l, 0, contador);
+                // Colocando nombres reservas
+                l = new Label(r.getNombre());
+                l.setPadding(new Insets(15, 15, 15, 15));
+                l.setStyle("-fx-font: 15 arial;");
+                gp2.add(l, 0, contador);
 
-                    // Colocando telefonos
-                    l = new Label(r.getTelefono());
-                    l.setPadding(new Insets(15, 15, 15, 15));
-                    l.setStyle("-fx-font: 15 arial;");
-                    gp2.add(l, 1, contador);
-                
+                // Colocando telefonos reservas
+                l = new Label(r.getTelefono());
+                l.setPadding(new Insets(15, 15, 15, 15));
+                l.setStyle("-fx-font: 15 arial;");
+                gp2.add(l, 1, contador);
+
+                // Colocando localidades reservas
+                l = new Label(Integer.toString(r.getNumLocalidades()));
+                l.setPadding(new Insets(15, 15, 15, 15));
+                l.setStyle("-fx-font: 15 arial;");
+                gp2.add(l, 2, contador);
+
+                // Colocando y Creando el boton CANCELAR de las reservas
+                Button btnReservar = new Button("CANCELAR");
+                btnReservar.setPadding(new Insets(10, 10, 10, 10));
+                HBox.setMargin(btnReservar, new Insets(5, 5, 5, 5));
+                btnReservar.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        Alert al = new Alert(Alert.AlertType.CONFIRMATION);
+                        al.setTitle("CANCELANDO");
+                        al.setHeaderText("Usted va a eliminar una reserva.");
+                        al.setContentText("¿Está usted seguro?");
+                        al.showAndWait();
+                        if (al.resultProperty().get() == ButtonType.OK) {
+                        }
+                    }
+                });
+                gp2.add(btnReservar, 3, contador);
+
+                // Colocando y Creando el boton COMPRAR de las reservas
+                Button btnComprar = new Button("COMPRAR");
+                btnComprar.setPadding(new Insets(10, 10, 10, 10));
+                HBox.setMargin(btnComprar, new Insets(5, 5, 5, 5));
+                btnComprar.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        CreadorVentanas.crearComprarReservar(r);
+                    }
+                });
+                gp2.add(btnComprar, 4, contador);
+                contador++;
+
             }
             ScrollPane sp = new ScrollPane();
             sp.setContent(gp2);
+            sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+            gp1.setPadding(new Insets(0, 13.5, 0, 0));
             sp.setFitToWidth(true);
             vb.getChildren().add(sp);
         }
-        
+
     }
 
     @Override
     public void refrescar() {
         initActualidad();
+        initVerReservas();
     }
 
     @Override

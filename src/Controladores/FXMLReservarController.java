@@ -135,7 +135,9 @@ public class FXMLReservarController implements Initializable, MiVentana {
     }
 
     private void capacidadProyeccion(String dia, String hora) {
-        if (dia == null || hora == null) {return;}
+        if (dia == null || hora == null) {
+            return;
+        }
         Proyeccion proyeccion = null;
         for (Proyeccion p : Singleton.getDataBase().getProyecciones()) {
             DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -165,7 +167,7 @@ public class FXMLReservarController implements Initializable, MiVentana {
             event.consume();
         }
     }
-    
+
     @FXML
     private void justInteger(KeyEvent event) {
         if (!"0123456789".contains(event.getCharacter())) {
@@ -182,17 +184,13 @@ public class FXMLReservarController implements Initializable, MiVentana {
 
     @FXML
     private void onReservar(ActionEvent event) {
-        if(fieldCliente.getText().equals("") || fieldTelefono.getText().equals("") || fieldLocalidades.getText().equals("")){
-           Alert al = new Alert(Alert.AlertType.ERROR);
-                    al.setTitle("ERROR");
-                    al.setHeaderText("NO SE HA PODIDO COMPLETAR LA RESERVA ");
-                    al.setContentText("FALTAN CAMPOS DE RESERVA POR RELLENAR.");
-                    al.showAndWait();
-                    if (al.resultProperty().get() == ButtonType.OK) {
-                        event.consume();
-                    } 
-        }
-        else{
+        if (fieldCliente.getText().equals("") || fieldTelefono.getText().equals("") || fieldLocalidades.getText().equals("")) {
+            Alert al = new Alert(Alert.AlertType.ERROR);
+            al.setTitle("ERROR");
+            al.setHeaderText("NO SE HA PODIDO COMPLETAR LA RESERVA ");
+            al.setContentText("FALTAN CAMPOS DE RESERVA POR RELLENAR.");
+            al.showAndWait();
+        } else {
             ArrayList<Proyeccion> proyecciones = new ArrayList<>();
             for (Proyeccion pro : Singleton.getDataBase().getProyecciones()) {
                 if (pro.getPelicula().getTitulo().equals(pelicula.getTitulo())) {
@@ -203,7 +201,7 @@ public class FXMLReservarController implements Initializable, MiVentana {
             for (Proyeccion pro : proyecciones) {
                 DateTimeFormatter dt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                 String st_dt = dt.format(pro.getDia());
-                if(st_dt.equals(comboDia.getSelectionModel().getSelectedItem()) && pro.getHoraInicio().equals(comboProyecciones.getSelectionModel().getSelectedItem())){
+                if (st_dt.equals(comboDia.getSelectionModel().getSelectedItem()) && pro.getHoraInicio().equals(comboProyecciones.getSelectionModel().getSelectedItem())) {
                     proyeccionAReservar = pro;
                 }
             }
@@ -212,5 +210,5 @@ public class FXMLReservarController implements Initializable, MiVentana {
             CreadorVentanas.refrescarTodas();
         }
     }
-        
+
 }

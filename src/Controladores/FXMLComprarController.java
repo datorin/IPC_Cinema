@@ -5,18 +5,23 @@
  */
 package Controladores;
 
+import Util.CreadorVentanas;
 import Util.ImagenLocalidad;
 import Util.Tupla;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -45,17 +50,19 @@ public class FXMLComprarController implements Initializable, MiVentana {
     @FXML
     private BorderPane borderPaneComprar;
     @FXML
-    private TextField fielLocalidades;
+    private TextField fieldLocalidades;
     @FXML
     private Label labelCapacidad;
     @FXML
     private Button brnRestarLocalidades;
     @FXML
     private Button btnSumarLocalidades;
-    
+
     private ArrayList<Tupla> seleccionados;
-    
+
     private ArrayList<Tupla> ocupadas;
+    @FXML
+    private Label labelPrecio;
 
     /**
      * Initializes the controller class.
@@ -68,6 +75,12 @@ public class FXMLComprarController implements Initializable, MiVentana {
     public void init(Proyeccion p, String s) {
         this.p = p;
         this.s = s;
+        fieldLocalidades.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                labelPrecio();
+            }
+        });
         seleccionados = new ArrayList<>();
         ocupadas = new ArrayList<>();
         makeGridAsientos();
@@ -78,6 +91,7 @@ public class FXMLComprarController implements Initializable, MiVentana {
     public void refrescar() {
         capacidadProyeccion();
         numLocalidades(s);
+        labelPrecio();
     }
 
     @Override
@@ -92,24 +106,38 @@ public class FXMLComprarController implements Initializable, MiVentana {
         gp.setHgap(3);
         gp.setVgap(5);
         gp.setPadding(new Insets(10, 10, 10, 10));
-        for (int i = 0; i < 12; i++) {
-            for (int j = 0; j < 18; j++) {
-                // Creando Asientos
+        for (int i = 0; i < 18; i++) {
+            for (int j = 0; j < 12; j++) {
                 ImageView peliImage = new ImageView();
-                if (p.getSala().getLocalidades()[j][i] == Sala.localidad.vendida) {
-                    ocupadas.add(new Tupla(i, j));
-                    InputStream is = this.getClass().getResourceAsStream("/Imagenes/butacaOcupada.png");
-                    Image image = new Image(is, 56.25, 68.25, true, true);
-                    peliImage.setImage(image);
+                if (i == 0) {
+                    Label l = new Label(Integer.toString(j + 1));
+                    l.setPadding(new Insets(10, 10, 10, 15));
+                    l.setStyle("-fx-font: 15 arial;");
+                    gp.add(l, j, i);
                 } else {
-                    InputStream is = this.getClass().getResourceAsStream("/Imagenes/butacaVacia.png");
-                    Image image = new Image(is, 56.25, 68.25, true, true);
-                    peliImage.setImage(image);
+                    if (j == 0) {
+                        Label l = new Label(Integer.toString(i + 1));
+                        l.setPadding(new Insets(10, 10, 10, 15));
+                        l.setStyle("-fx-font: 15 arial;");
+                        gp.add(l, j, i);
+                    } else {
+                        // Creando Asientos
+                        if (p.getSala().getLocalidades()[i][j] == Sala.localidad.vendida) {
+                            ocupadas.add(new Tupla(i, j));
+                            InputStream is = this.getClass().getResourceAsStream("/Imagenes/butacaOcupada.png");
+                            Image image = new Image(is, 38, 45.5, true, true);
+                            peliImage.setImage(image);
+                        } else {
+                            InputStream is = this.getClass().getResourceAsStream("/Imagenes/butacaVacia.png");
+                            Image image = new Image(is, 38, 45.5, true, true);
+                            peliImage.setImage(image);
+                        }
+                    }
                 }
-                
+
                 gp.add(peliImage, j, i);
-                
-                new ImagenLocalidad(peliImage, i, j, seleccionados, ocupadas);
+
+                new ImagenLocalidad(peliImage, i, j, seleccionados, ocupadas, fieldLocalidades);
             }
         }
         borderPaneComprar.setCenter(gp);
@@ -126,16 +154,16 @@ public class FXMLComprarController implements Initializable, MiVentana {
             return;
         }
         int i = 0;
-        if (Integer.parseInt(fielLocalidades.getText() + event.getCharacter()) > p.getSala().getCapacidad()
+        if (Integer.parseInt(fieldLocalidades.getText() + event.getCharacter()) > p.getSala().getCapacidad()
                 - p.getReservas().stream().map((r) -> r.getNumLocalidades()).reduce(i, Integer::sum)) {
             event.consume();
             int valorActual = p.getSala().getCapacidad() - p.getReservas().stream().map((r) -> r.getNumLocalidades()).reduce(i, Integer::sum);
             String s = Integer.toString(valorActual);
-            fielLocalidades.setText(s);
+            fieldLocalidades.setText(s);
         }
-        if (Integer.parseInt(fielLocalidades.getText() + event.getCharacter()) == 0) {
+        if (Integer.parseInt(fieldLocalidades.getText() + event.getCharacter()) == 0) {
             event.consume();
-            fielLocalidades.setText(Integer.toString(1));
+            fieldLocalidades.setText(Integer.toString(1));
         }
     }
 
@@ -148,13 +176,13 @@ public class FXMLComprarController implements Initializable, MiVentana {
     }
 
     private void numLocalidades(String s) {
-        fielLocalidades.setText(s);
+        fieldLocalidades.setText(s);
     }
 
     @FXML
     private void onRestarLocalidades(ActionEvent event) {
         try {
-            int valorActual = Integer.parseInt(fielLocalidades.getText());
+            int valorActual = Integer.parseInt(fieldLocalidades.getText());
             valorActual--;
             int i = 0;
             if (valorActual > p.getSala().getCapacidad() - p.getReservas().stream().map((r) -> r.getNumLocalidades()).reduce(i, Integer::sum)) {
@@ -164,16 +192,17 @@ public class FXMLComprarController implements Initializable, MiVentana {
                 valorActual = 1;
             }
             String s = Integer.toString(valorActual);
-            fielLocalidades.setText(s);
+            fieldLocalidades.setText(s);
+            labelPrecio();
         } catch (NumberFormatException e) {
-            fielLocalidades.setText(Integer.toString(1));
+            fieldLocalidades.setText(Integer.toString(1));
         }
     }
 
     @FXML
     private void onSumarLocalidades(ActionEvent event) {
         try {
-            int valorActual = Integer.parseInt(fielLocalidades.getText());
+            int valorActual = Integer.parseInt(fieldLocalidades.getText());
             valorActual++;
             int i = 0;
             if (valorActual > p.getSala().getCapacidad() - p.getReservas().stream().map((r) -> r.getNumLocalidades()).reduce(i, Integer::sum)) {
@@ -183,9 +212,57 @@ public class FXMLComprarController implements Initializable, MiVentana {
                 valorActual = 1;
             }
             String s = Integer.toString(valorActual);
-            fielLocalidades.setText(s);
+            fieldLocalidades.setText(s);
+            labelPrecio();
         } catch (NumberFormatException e) {
-            fielLocalidades.setText(Integer.toString(1));
+            fieldLocalidades.setText(Integer.toString(1));
+        }
+    }
+
+    private int precioLocalidades() {
+        int precio = 0;
+        switch (p.getDia().getDayOfWeek()) {
+            case WEDNESDAY:
+                precio = 5;
+                break;
+            case FRIDAY:
+            case SATURDAY:
+            case SUNDAY:
+                precio = 8;
+                break;
+            default:
+                precio = 6;
+                break;
+        }
+        return Integer.parseInt(fieldLocalidades.getText()) * precio;
+    }
+
+    private void labelPrecio() {
+        labelPrecio.setText(Integer.toString(precioLocalidades()) + " €");
+    }
+
+    @FXML
+    private void onComprarEntradas(ActionEvent event) {
+        if (seleccionados.size() == Integer.parseInt(fieldLocalidades.getText())) {
+            Alert al = new Alert(Alert.AlertType.CONFIRMATION);
+            al.setTitle("COMPRANDO");
+            al.setHeaderText("Va a comprar " + fieldLocalidades.getText() + " entradas con un coste de " + labelPrecio.getText());
+            al.setContentText("¿Está usted seguro?");
+            al.showAndWait();
+            if (al.resultProperty().get() == ButtonType.OK) {
+                for (Tupla t : seleccionados) {
+                    p.getSala().updateLocalidad(t.getI(), t.getJ(), Sala.localidad.vendida);
+                    p.getSala().setEntradasVendidas(p.getSala().getEntradasVendidas()+1);
+                }
+                cerrar();
+                CreadorVentanas.refrescarTodas();
+            }
+        } else {
+            Alert al = new Alert(Alert.AlertType.ERROR);
+            al.setTitle("ERROR");
+            al.setHeaderText("NO SE HA PODIDO COMPLETAR LA RESERVA ");
+            al.setContentText("FALTAN LOCALIDADES DE COMPRA POR RELLENAR.");
+            al.showAndWait();
         }
     }
 }

@@ -6,6 +6,7 @@
 package Util;
 
 import Controladores.FXMLComprarController;
+import Controladores.FXMLComprarReservarController;
 import Controladores.FXMLDocumentController;
 import Controladores.FXMLReservarController;
 import Controladores.MiVentana;
@@ -22,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import modelo.Pelicula;
 import modelo.Proyeccion;
+import modelo.Reserva;
 
 /**
  *
@@ -109,6 +111,26 @@ public class CreadorVentanas {
             stageReservar.initModality(Modality.WINDOW_MODAL);
             stageReservar.show();
             stageReservar.setResizable(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return fdc;
+    }
+    
+    public static FXMLComprarReservarController crearComprarReservar(Reserva r) {
+        FXMLComprarReservarController fdc = null;
+        try {
+            FXMLLoader myLoader = new FXMLLoader(Object.class.getResource("/Controladores/FXMLComprarReservar.fxml"));
+            Parent root = (Parent) myLoader.load();
+            fdc = myLoader.<FXMLComprarReservarController>getController();
+            fdc.init(r);
+            Scene scene = new Scene(root);
+            Stage stageComprarReservar = new Stage();
+            listVent.addVentana((MiVentana) fdc, stageComprarReservar);
+            stageComprarReservar.setScene(scene);
+            stageComprarReservar.initModality(Modality.WINDOW_MODAL);
+            stageComprarReservar.show();
+            stageComprarReservar.setResizable(false);
         } catch (Exception e) {
             e.printStackTrace();
         }

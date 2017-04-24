@@ -8,6 +8,7 @@ package Util;
 import java.io.InputStream;
 import java.util.ArrayList;
 import javafx.event.EventHandler;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -17,18 +18,21 @@ import javafx.scene.input.MouseEvent;
  * @author Daniel
  */
 public class ImagenLocalidad {
-    
+
     private ArrayList<Tupla> seleccionados;
-    
+
     private ArrayList<Tupla> ocupadas;
 
-    public ImagenLocalidad(ImageView iv, int i, int j, ArrayList<Tupla> seleccionados, ArrayList<Tupla> ocupadas) {
+    private TextField maximo;
+
+    public ImagenLocalidad(ImageView iv, int i, int j, ArrayList<Tupla> seleccionados, ArrayList<Tupla> ocupadas, TextField maximo) {
         this.seleccionados = seleccionados;
         this.ocupadas = ocupadas;
+        this.maximo = maximo;
         asientos(iv, i, j);
     }
-    
-    private void asientos(ImageView iv, int i, int j){
+
+    private void asientos(ImageView iv, int i, int j) {
         Tupla ocupada = null;
         for (Tupla t : ocupadas) {
             if (t.equals(new Tupla(i, j))) {
@@ -48,14 +52,16 @@ public class ImagenLocalidad {
                         }
                     }
                     if (seleccionada == null) {
-                        seleccionados.add(seleccionada);
-                        InputStream is = this.getClass().getResourceAsStream("/Imagenes/butacaSeleccionada.png");
-                        Image image = new Image(is, 56.25, 68.25, true, true);
-                        iv.setImage(image);
+                        if (Integer.parseInt(maximo.getText()) > seleccionados.size()) {
+                            seleccionados.add(new Tupla(i, j));
+                            InputStream is = this.getClass().getResourceAsStream("/Imagenes/butacaSeleccionada.png");
+                            Image image = new Image(is, 38, 45.5, true, true);
+                            iv.setImage(image);
+                        }
                     } else {
                         seleccionados.remove(seleccionada);
                         InputStream is = this.getClass().getResourceAsStream("/Imagenes/butacaVacia.png");
-                        Image image = new Image(is, 56.25, 68.25, true, true);
+                        Image image = new Image(is, 38, 45.5, true, true);
                         iv.setImage(image);
                     }
                 }

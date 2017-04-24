@@ -23,4 +23,21 @@ public class Tupla {
     public boolean equals(Tupla t){
         return this.i == t.i && this.j == t.j;
     }
+
+    public int getI() {
+        return i;
+    }
+
+    public void setI(int i) {
+        this.i = i;
+    }
+
+    public int getJ() {
+        return j;
+    }
+
+    public void setJ(int j) {
+        this.j = j;
+    }
+    
 }

@@ -14,12 +14,12 @@
    <right>
       <VBox BorderPane.alignment="TOP_CENTER">
          <children>
-            <Button fx:id="btnComprar" mnemonicParsing="false" text="COMPRAR">
+            <Button fx:id="btnComprar" mnemonicParsing="false" onAction="#onComprarEntradas" text="COMPRAR">
                <padding>
                   <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
                </padding>
                <VBox.margin>
-                  <Insets bottom="50.0" left="5.0" right="5.0" top="5.0" />
+                  <Insets bottom="50.0" left="5.0" right="5.0" top="25.0" />
                </VBox.margin>
                <font>
                   <Font size="18.0" />
@@ -37,7 +37,7 @@
                         <Insets bottom="10.0" left="22.0" right="22.0" top="10.0" />
                      </padding>
                   </Button>
-                  <TextField fx:id="fielLocalidades" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#justLocalidades" prefWidth="50.0" text="216">
+                  <TextField fx:id="fieldLocalidades" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#justLocalidades" prefWidth="50.0" text="216">
                      <font>
                         <Font size="17.0" />
                      </font>
@@ -61,6 +61,19 @@
                <font>
                   <Font size="19.0" />
                </font>
+            </Label>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PRECIO: ">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Text>
+            <Label fx:id="labelPrecio" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="90.0" text="0 €">
+               <font>
+                  <Font size="19.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="40.0" top="5.0" />
+               </VBox.margin>
             </Label>
          </children>
          <BorderPane.margin>
