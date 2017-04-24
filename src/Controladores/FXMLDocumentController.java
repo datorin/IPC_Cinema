@@ -268,6 +268,9 @@ public class FXMLDocumentController implements Initializable, MiVentana {
                     btnComprar.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
+                            if (fieldCantidad.getText().isEmpty()) {
+                                fieldCantidad.setText(Integer.toString(1));
+                            }
                             CreadorVentanas.crearComprar(p,fieldCantidad.getText());
                             fieldCantidad.setText(Integer.toString(1));
                         }
