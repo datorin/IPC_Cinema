@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import modelo.Pelicula;
 import modelo.Proyeccion;
+import modelo.Reserva;
 /**
  *
  * @author Daniel
@@ -21,6 +22,8 @@ public class DataBase {
     private ArrayList<Proyeccion> proyecciones;
 
     private ArrayList<Pelicula> peliculas;
+    
+    private final AccesoaBD accesoaDB = new AccesoaBD();
 
     public DataBase() {
         AccesoaBD a = new AccesoaBD();
@@ -57,5 +60,19 @@ public class DataBase {
             if(!al.contains(st_dt)) al.add(st_dt);
         }
         return al;
+    }
+    public void guardarProyecciones(){
+        for(Proyeccion p : proyecciones){
+            accesoaDB.salvarProyeccion(p);
+        }
+    }
+public ArrayList<Reserva> getTodasReservas(){
+        ArrayList<Reserva> lista = new ArrayList<>();
+        for(Proyeccion p : proyecciones){
+            for(Reserva r : p.getReservas()){
+                lista.add(r);
+            }
+        }
+        return lista;
     }
 }

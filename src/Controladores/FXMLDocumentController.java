@@ -47,11 +47,14 @@ public class FXMLDocumentController implements Initializable, MiVentana {
     private ScrollPane contenedorPeliculas;
     @FXML
     private Tab tabActualidad;
+    @FXML
+    private Tab tabVerReservas;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initPeliculas();
         initActualidad();
+        initVerReservas();
     }
 
     private void initPeliculas() {
@@ -284,6 +287,99 @@ public class FXMLDocumentController implements Initializable, MiVentana {
             sp.setFitToWidth(true);
             vb.getChildren().add(sp);
         }
+    }
+    private void initVerReservas(){
+        TabPane root = new TabPane();
+        tabVerReservas.setContent(root);
+        for (String s : Singleton.getDataBase().getDias()) {
+            Tab tb = new Tab(s);
+            tb.setClosable(false);
+            root.getTabs().add(tb);
+            VBox vb = new VBox();
+            tb.setContent(vb);
+            GridPane gp1 = new GridPane();
+            gp1.setPadding(new Insets(0, 13.5, 0, 0));
+            ColumnConstraints c0 = new ColumnConstraints();
+            c0.setPercentWidth(200 / 6);
+            c0.setHalignment(HPos.CENTER);
+            ColumnConstraints c1 = new ColumnConstraints();
+            c1.setPercentWidth(100 / 6);
+            c1.setHalignment(HPos.CENTER);
+            ColumnConstraints c2 = new ColumnConstraints();
+            c2.setPercentWidth(200 / 6);
+            c2.setHalignment(HPos.CENTER);
+            ColumnConstraints c3 = new ColumnConstraints();
+            c3.setPercentWidth(100 / 6);
+            c3.setHalignment(HPos.CENTER);
+            ColumnConstraints c4 = new ColumnConstraints();
+            c4.setPercentWidth(100 / 6);
+            c4.setHalignment(HPos.CENTER);
+            gp1.getColumnConstraints().addAll(c0, c1, c2, c3, c4);
+            Label l = new Label("NOMBRE");
+            l.setPadding(new Insets(15, 15, 15, 15));
+            l.setStyle("-fx-font: 15 arial;");
+            gp1.add(l, 0, 0);
+            l = new Label("TELEFONO");
+            l.setPadding(new Insets(15, 15, 15, 15));
+            l.setStyle("-fx-font: 15 arial;");
+            gp1.add(l, 1, 0);
+            l = new Label("NUM LOCALIDADES");
+            l.setPadding(new Insets(15, 15, 15, 15));
+            l.setStyle("-fx-font: 15 arial;");
+            gp1.add(l, 2, 0);
+            l = new Label("CANCELAR");
+            l.setPadding(new Insets(15, 15, 15, 15));
+            l.setStyle("-fx-font: 15 arial;");
+            gp1.add(l, 3, 0);
+            l = new Label("COMPRAR");
+            l.setPadding(new Insets(15, 15, 15, 15));
+            l.setStyle("-fx-font: 15 arial;");
+            gp1.add(l, 4, 0);
+            vb.getChildren().add(gp1);
+            // Creando GridPane proyecciones
+            GridPane gp2 = new GridPane();
+            gp2.setVgap(10);
+            int contador = 0;
+            for (Reserva r : Singleton.getDataBase().getTodasReservas()) {
+               
+                
+                    // Creando las columna de la GridPane
+                    c0 = new ColumnConstraints();
+                    c0.setPercentWidth(200 / 6);
+                    c0.setHalignment(HPos.LEFT);
+                    c1 = new ColumnConstraints();
+                    c1.setPercentWidth(100 / 6);
+                    c1.setHalignment(HPos.CENTER);
+                    c2 = new ColumnConstraints();
+                    c2.setPercentWidth(200 / 6);
+                    c2.setHalignment(HPos.CENTER);
+                    c3 = new ColumnConstraints();
+                    c3.setPercentWidth(100 / 6);
+                    c3.setHalignment(HPos.CENTER);
+                    c4 = new ColumnConstraints();
+                    c4.setPercentWidth(100 / 6);
+                    c4.setHalignment(HPos.CENTER);
+                    gp2.getColumnConstraints().setAll(c0, c1, c2, c3, c4);
+
+                    // Colocando nombres
+                    l = new Label(r.getNombre());
+                    l.setPadding(new Insets(15, 15, 15, 15));
+                    l.setStyle("-fx-font: 15 arial;");
+                    gp2.add(l, 0, contador);
+
+                    // Colocando telefonos
+                    l = new Label(r.getTelefono());
+                    l.setPadding(new Insets(15, 15, 15, 15));
+                    l.setStyle("-fx-font: 15 arial;");
+                    gp2.add(l, 1, contador);
+                
+            }
+            ScrollPane sp = new ScrollPane();
+            sp.setContent(gp2);
+            sp.setFitToWidth(true);
+            vb.getChildren().add(sp);
+        }
+        
     }
 
     @Override
